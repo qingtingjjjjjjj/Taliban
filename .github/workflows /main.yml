@@ -41,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # 配置Git身份
-          git config --global user.email "362213335lkh@gmail.com"
-          git config --global user.name "l19270149853"
+          git config --global user.email "quwuping11@gmail.com"
+          git config --global user.name "qingtingjjjjjjj"
 
           # 设置远程仓库认证
           git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
