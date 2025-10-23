@@ -6,14 +6,13 @@ import concurrent.futures
 from urllib.parse import urljoin, urlparse, urlunparse
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from tqdm import tqdm  # 进度条库
 
 # ======================
 # 增强版配置参数
 # ======================
-MAX_WORKERS = 15
-SPEED_THRESHOLD = 0.15
-REQUEST_TIMEOUT = 20
+MAX_WORKERS = 15  # 并发数
+SPEED_THRESHOLD = 0.15  # 原有测速阈值
+REQUEST_TIMEOUT = 20  # 超时时间
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 RETRY_STRATEGY = Retry(
     total=5,
@@ -24,14 +23,13 @@ RETRY_STRATEGY = Retry(
 
 class IPTVUpdater:
     def __init__(self):
-        self.channel_dict = {}
+        self.channel_dict = {}  # 字典去重
         self.session = self._create_session()
         self.sources = [
             "https://d.kstore.dev/download/10694/zmtvid.txt",
             "https://raw.githubusercontent.com/iptv-org/iptv/master/scripts/sources.md",
             "https://raw.githubusercontent.com/freeiptv/iptv/master/sources.md"
         ]
-        self.fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/refs/heads/main/%E7%AC%AC%E4%BA%8C"
 
     def _create_session(self):
         session = requests.Session()
@@ -99,76 +97,77 @@ class IPTVUpdater:
                 speed = (downloaded / 1024) / duration
                 return round(speed, 2)
         except Exception as e:
+            print(f"⛔ 测速失败 {url}: {str(e)}")
             return 0
 
     def _process_api(self, api_url):
+        print(f"\n▶ 正在处理API端点: {api_url}")
         try:
             response = self.session.get(api_url, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             try:
                 data = response.json()
                 if not isinstance(data.get('data'), list):
+                    print(f"⚠ 无效数据结构: {api_url}")
                     return
             except ValueError:
+                print(f"⚠ JSON解析失败: {api_url}")
                 return
-
             with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 futures = []
                 for idx, channel in enumerate(data['data'][:200]):
                     if not all(k in channel for k in ('name', 'url')):
                         continue
-                    full_url = urljoin(api_url, channel['url'].strip())
-                    unique_key = f"{channel['name'].strip()}|{full_url}"
-                    if unique_key not in self.channel_dict:
-                        futures.append((
-                            channel['name'].strip(),
-                            full_url,
-                            executor.submit(self._speed_test, full_url)
-                        ))
-
+                    try:
+                        full_url = urljoin(api_url, channel['url'].strip())
+                        unique_key = f"{channel['name'].strip()}|{full_url}"
+                        if unique_key not in self.channel_dict:
+                            futures.append((channel['name'].strip(), full_url, executor.submit(self._speed_test, full_url)))
+                    except Exception as e:
+                        print(f"⚠ 频道处理异常: {str(e)}")
                 for name, url, future in futures:
                     speed = future.result()
                     if speed > SPEED_THRESHOLD:
                         self.channel_dict[f"{name}|{url}"] = f"{name},{url}"
-
-        except Exception:
-            pass
-
-    # 固定接口处理，带分组测速进度条
-    def _process_fixed_api(self):
-        try:
-            response = self.session.get(self.fixed_api, timeout=REQUEST_TIMEOUT)
-            response.raise_for_status()
-            content = response.text
-            group_blocks = re.split(r'\n(?=[^\s]+,#genre#)', content)
-            for block in group_blocks:
-                lines = block.strip().splitlines()
-                if not lines:
-                    continue
-                group_name = lines[0].split(',')[0].strip()
-                channel_lines = lines[1:]
-                print(f"\n分组 '{group_name}' 测速中...")
-                with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                    futures = []
-                    for line in channel_lines:
-                        if ',' not in line:
-                            continue
-                        name, url = line.split(',', 1)
-                        name, url = name.strip(), url.strip()
-                        futures.append((name, url, executor.submit(self._speed_test, url)))
-                    for name, url, future in tqdm(futures, desc=f"{group_name} 进度", unit="channel"):
-                        speed = future.result()
-                        if speed > 0:
-                            key = f"{name}|{url}"
-                            self.channel_dict[key] = f"{name},{url}"
+                        print(f"✔ {name.ljust(20)} {speed} KB/s")
+                    else:
+                        print(f"✘ {name.ljust(20)} 速度不足 {speed} KB/s")
         except Exception as e:
-            print(f"固定接口处理失败: {str(e)}")
+            print(f"⚠ 请求失败: {str(e)}")
+
+    def _process_fixed_api(self, api_url):
+        """固定接口拉取直播源，原有逻辑测速，不限制速度阈值"""
+        print(f"\n▶ 正在处理固定接口: {api_url}")
+        try:
+            response = self.session.get(api_url, timeout=REQUEST_TIMEOUT)
+            response.raise_for_status()
+            text = response.text
+            group_pattern = re.compile(r'#EXTINF:.*?,(.*?)\n(.*?)\n', re.S)
+            matches = group_pattern.findall(text)
+            if not matches:
+                print(f"⚠ 未找到有效频道: {api_url}")
+                return
+            with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                futures = []
+                for name, url in matches:
+                    full_url = url.strip()
+                    unique_key = f"{name.strip()}|{full_url}"
+                    if unique_key not in self.channel_dict:
+                        futures.append((name.strip(), full_url, executor.submit(self._speed_test, full_url)))
+                for name, url, future in futures:
+                    speed = future.result()
+                    if speed > 0:
+                        self.channel_dict[f"{name}|{url}"] = f"{name},{url}"
+                        print(f"✔ {name.ljust(20)} {speed} KB/s")
+                    else:
+                        print(f"✘ {name.ljust(20)} 速度不足 {speed} KB/s")
+        except Exception as e:
+            print(f"⚠ 固定接口处理失败: {str(e)}")
 
     def _save_channels(self):
         cctv_list, satellite_list, others_list = [], [], []
         cctv_pattern = re.compile(r"CCTV[\-\s]?(\d{1,2}\+?|[4-8]K|UHD|HD|4K|8K)", re.I)
         satellite_pattern = re.compile(r"([\u4e00-\u9fa5]{2,4}卫视)(?:高清|标清|\+?)?台?")
-
         for line in self.channel_dict.values():
             name, url = line.split(',', 1)
             if cctv_match := cctv_pattern.search(name):
@@ -179,31 +178,48 @@ class IPTVUpdater:
                 sat_name = sat_match.group(1)
                 satellite_list.append(f"{sat_name},{url}")
             else:
-                others_list.append(f"{name},{url}")
-
+                others_list.append(line)
         cctv_list.sort(key=lambda x: int(re.search(r"\d+", x).group()) if re.search(r"\d+", x) else 999)
         satellite_list = sorted(list(set(satellite_list)))
         others_list = sorted(list(set(others_list)))
-
-        with open("zby.txt", "w", encoding="utf-8") as f:
-            f.write(f"# 最后更新时间: {time.strftime('%Y-%m-%d %H:%M')}\n\n")
-            f.write("央视频道,#genre#\n")
-            f.write("\n".join(cctv_list) + "\n\n")
-            f.write("卫视频道,#genre#\n")
-            f.write("\n".join(satellite_list) + "\n\n")
-            f.write("其他频道,#genre#\n")
-            f.write("\n".join(others_list))
+        try:
+            with open("zby.txt", "w", encoding="utf-8") as f:
+                f.write(f"# 最后更新时间: {time.strftime('%Y-%m-%d %H:%M')}\n\n")
+                f.write("央视频道,#genre#\n")
+                f.write("\n".join(cctv_list) + "\n\n")
+                f.write("卫视频道,#genre#\n")
+                f.write("\n".join(satellite_list) + "\n\n")
+                f.write("其他频道,#genre#\n")
+                f.write("\n".join(others_list))
+            print(f"\n✅ 成功写入文件，总计频道数：{len(self.channel_dict)}")
+            print(f"文件路径：{os.path.abspath('zby.txt')}")
+            print(f"文件大小：{os.path.getsize('zby.txt') / 1024:.2f} KB")
+        except Exception as e:
+            print(f"⛔ 文件写入失败: {str(e)}")
+            raise
 
     def run(self):
-        print("\nIPTV列表更新程序启动")
+        print("\n" + "="*40)
+        print(" IPTV列表更新程序启动 ".center(40, "★"))
+        print("="*40)
+        print("\n步骤1/4：获取源数据")
         api_urls = self._fetch_sources()
+        print(f"找到有效API端点：{len(api_urls)}个")
+        print("\n步骤2/4：处理API端点")
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             executor.map(self._process_api, api_urls)
-        self._process_fixed_api()  # 固定接口测速
+        # 新增：固定接口
+        fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/refs/heads/main/%E7%AC%AC%E4%BA%8C"
+        self._process_fixed_api(fixed_api)
+        print("\n步骤3/4：整理频道数据")
         self._save_channels()
-        print("更新完成")
-
+        print("\n步骤4/4：完成更新")
+        print(f"{'='*40}\n{' 更新完成 '.center(40, '☆')}\n{'='*40}")
 
 if __name__ == "__main__":
-    updater = IPTVUpdater()
-    updater.run()
+    try:
+        updater = IPTVUpdater()
+        updater.run()
+    except Exception as e:
+        print(f"\n⛔ 程序异常终止: {str(e)}")
+        exit(1)
