@@ -3795,7 +3795,7 @@ sichuan,http://103.121.188.31:9901/tsfile/live/1038_1.m3u8?key=txiptv&playlive=1
 
 # ===== 新增直播源 =====
 
-【山西】太原联通酒店源
+【山西】太原联通酒店源#genre#
 孝义综合,http://116.135.22.91:85/tsfile/live/1016_1.m3u8?key=txiptv&playlive=1&authid=0
 太原新闻综合,http://116.135.22.91:85/tsfile/live/1000_1.m3u8?key=txiptv&playlive=1&authid=0
 山西黄河高清,http://116.135.22.91:85/tsfile/live/1013_1.m3u8?key=txiptv&playlive=1&authid=0
@@ -3803,7 +3803,7 @@ sichuan,http://103.121.188.31:9901/tsfile/live/1038_1.m3u8?key=txiptv&playlive=1
 山西社会与法治高清,http://116.135.22.91:85/tsfile/live/1014_1.m3u8?key=txiptv&playlive=1&authid=0
 山西影视高清,http://116.135.22.91:85/tsfile/live/1012_1.m3u8?key=txiptv&playlive=1&authid=0
 有效期：6天
-【吉林】吉祥新闻网站、吉林电视台官方
+【吉林】吉祥新闻网站、吉林电视台官方#genre#
 梅河口综合,http://stream4.jlntv.cn/mhk/playlist.m3u8
 前郭综合,http://stream2.jlntv.cn/qg/playlist.m3u8
 集安综合,http://stream2.jlntv.cn/ja/playlist.m3u8
@@ -3891,7 +3891,7 @@ CCTV-15,http://litao1100.wicp.io:9901/tsfile/live/1025_1.m3u8?key=txiptv&playliv
 黑龙江卫视,http://litao1100.wicp.io:9901/tsfile/live/0143_1.m3u8?key=txiptv&playlive=1&authid=0
 金鹰卡通,http://litao1100.wicp.io:9901/tsfile/live/1005_1.m3u8?key=txiptv&playlive=1&authid=0
 北京卡通,http://litao1100.wicp.io:9901/tsfile/live/1006_1.m3u8?key=txiptv&playlive=1&authid=0
-【安徽】亳州电信酒店源
+【安徽】亳州电信酒店源#genre#
 亳州综合,http://60.174.86.121:9003/hls/2/index.m3u8
 亳州农村,http://60.174.86.121:9003/hls/3/index.m3u8
 多唱台,http://60.174.86.121:9003/hls/8/index.m3u8
@@ -3899,7 +3899,7 @@ CCTV-15,http://litao1100.wicp.io:9901/tsfile/live/1025_1.m3u8?key=txiptv&playliv
 唱歌MV台,http://60.174.86.121:9003/hls/22/index.m3u8
 哈哈炫动高清,http://60.174.86.121:9003/hls/100000/index.m3u8
 有效期: 9天
-【广东】广州电信酒店源
+【广东】广州电信酒店源#genre#
 星空卫视,http://125.94.173.145:8081/hls/18/index.m3u8
 TVB翡翠台,http://125.94.173.145:8081/hls/20/index.m3u8
 TVB 明珠台,http://125.94.173.145:8081/hls/21/index.m3u8
@@ -3908,7 +3908,7 @@ TVB 明珠台,http://125.94.173.145:8081/hls/21/index.m3u8
 广州法治,http://125.94.173.145:8081/hls/37/index.m3u8
 澳视澳门,http://125.94.173.145:8081/hls/73/index.m3u8
 有效期：2天
-【海南】海口电信
+【海南】海口电信#genre#
 屯昌综合,http://112.66.97.7:8888/udp/239.253.64.117:5140
 昌江综合,http://112.66.97.7:8888/udp/239.253.64.108:5140
 白沙综合,http://112.66.97.7:8888/udp/239.253.64.118:5140
@@ -3923,7 +3923,7 @@ TVB 明珠台,http://125.94.173.145:8081/hls/21/index.m3u8
 文昌综合,http://112.66.97.7:8888/udp/239.253.64.105:5140
 五指山新闻综合,http://112.66.97.7:8888/udp/239.253.64.69:5140
 有效期：22天
-【河北】秦皇岛电信酒店源
+【河北】秦皇岛电信酒店源#genre#
 秦皇岛新闻综合,http://106.118.70.125:9901/tsfile/live/1006_1.m3u8?key=txiptv&playlive=1&authid=0
 秦皇岛公共高清,http://106.118.70.125:9901/tsfile/live/1007_1.m3u8?key=txiptv&playlive=1&authid=0
 唐山新闻综合高清,http://106.118.70.125:9901/tsfile/live/1009_1.m3u8?key=txiptv&playlive=1&authid=0
@@ -3934,14 +3934,14 @@ TVB 明珠台,http://125.94.173.145:8081/hls/21/index.m3u8
 滦南综合,http://106.118.70.125:9901/tsfile/live/1017_1.m3u8?key=txiptv&playlive=1&authid=0
 滦州综合,http://106.118.70.125:9901/tsfile/live/1018_1.m3u8?key=txiptv&playlive=1&authid=0
 有效期：1天
-【山东】临沂联通酒店源
+【山东】临沂联通酒店源#genre#
 兰陵综合,http://112.234.21.45:9901/tsfile/live/1022_1.m3u8?key=txiptv&playlive=1&authid=0
 兰陵公共,http://112.234.21.45:9901/tsfile/live/0113_1.m3u8?key=txiptv&playlive=1&authid=0
 临沂经济,http://112.234.21.45:9901/tsfile/live/1019_1.m3u8?key=txiptv&playlive=1&authid=0
 临沂经济,http://112.234.21.45:9901/tsfile/live/1016_1.m3u8?key=txiptv&playlive=1&authid=0
 临沂导视,http://112.234.21.45:9901/tsfile/live/1038_1.m3u8?key=txiptv&playlive=1&authid=0
 有效期：1天
-【山西】吕梁联通酒店源
+【山西】吕梁联通酒店源#genre#
 孝义综合,http://118.77.9.10:9901/tsfile/live/1005_1.m3u8?key=txiptv&playlive=1&authid=0
 吕梁综合高清,http://118.77.9.10:9901/tsfile/live/1035_1.m3u8?key=txiptv&playlive=1&authid=0
 吕梁公共高清,http://118.77.9.10:9901/tsfile/live/1037_1.m3u8?key=txiptv&playlive=1&authid=0
@@ -3964,7 +3964,7 @@ TVB 明珠台,http://125.94.173.145:8081/hls/21/index.m3u8
 厦门卫视,http://47.122.125.40:6666/hls/xmtv.m3u8 
 鍘﹂棬鍗,http://tvh.990066.xyz/stream/channelid/833022827?profile=pass
 厦门卫视,http://156.226.171.32:50001/TVOD/1000000005000266006/ystenlive/index.m3u8
-【河北】廊坊联通酒店源
+【河北】廊坊联通酒店源#genre#
 河北经济生活高清,http://60.10.139.113:8801/hls/40/index.m3u8
 河北都市高清,http://60.10.139.113:8801/hls/41/index.m3u8
 河北影视剧高清,http://60.10.139.113:8801/hls/42/index.m3u8
@@ -4074,7 +4074,7 @@ CHC影迷电影,http://nas.201606.xyz:4022/rtp/239.10.0.88:5140
 
 
 
-【甘肃】中国定西官方
+【甘肃】中国定西官方#genre#
 定西综合,http://v4-33944598bb20d6780a8d3ee291f25ec5.livehwc4.com/play.kankanlive.com/live/1745232061100288.m3u8
 定西文旅,http://v4-33944598bb20d6780a8d3ee291f25ec5.livehwc4.com/play.kankanlive.com/live/1745232082475287.m3u8
 翡翠台,http://php.jdshipin.com/TVOD/iptv.php?id=fct
@@ -4150,7 +4150,7 @@ CCTV13,https://cdn3.163189.xyz/163189/cctv13
 深圳财经生活,https://cdn3.163189.xyz/163189/szcjsh
 第一财经,https://cdn3.163189.xyz/163189/dycj
 五星体育,https://cdn3.163189.xyz/163189/wxty
-今日影视代理：
+今日影视代理：#genre#
 凤凰卫视中文台,http://t.061899.xyz/tl/js/js.php?id=fhwszwt
 凤凰卫视资讯台,http://t.061899.xyz/tl/js/js.php?id=fhwszxt
 凤凰卫视香港台,http://t.061899.xyz/tl/js/js.php?id=fhwsxgt
@@ -4967,7 +4967,7 @@ CHC动作电影,http://iptv.huuc.edu.cn/hls/chcatv.m3u8
 星空卫视,http://iptv.huuc.edu.cn/hls/startv.m3u8
 SPORTS,http://iptv.huuc.edu.cn/hls/starsports.m3u8
 探索频道,http://iptv.huuc.edu.cn/hls/discovery.m3u8
-💫会员频道_8642,#genre#
+会员频道_8642,#genre#
 松视1台,https://18.svi-studio.com/live/908957700097/132663288386/5.m3u8
 松视2台,http://18.svi-studio.com:8880/live/091271435055/841916267544/6.m3u8
 香蕉台,https://18.svi-studio.com/live/565361330108/206277615704/4.m3u8
@@ -5000,7 +5000,7 @@ Adult IPTV (18+),http://cdn.adultiptv.net/bigass.m3u8
 惊艳台欧美版,http://live.redtraffic.xyz:80/cuckold.m3u8
 俄罗斯成人4台,http://live.redtraffic.xyz/blowjob.m3u8?fluxuslust.m3u8
 俄罗斯成人5台,http://live.redtraffic.xyz/bigdick.m3u8?fluxuslust.m3u8
-💫加勒比_8642,#genre#
+加勒比_8642,#genre#
 加勒比112318美月,https://fc.maa1804.com/g/ijttkoqump/ijttkoqump.m3u8
 加勒比120316音羽,https://fc.maa1804.com/f/rnczxtyxch/rnczxtyxch.m3u8
 加勒比090716西川,https://fc.maa1804.com/d/fhctzryess/fhctzryess.m3u8
@@ -5081,21 +5081,21 @@ Adult IPTV (18+),http://cdn.adultiptv.net/bigass.m3u8
 一本道010513爱原,https://fc.maa1804.com/b/whsacldsob/whsacldsob.m3u8
 一本道072916青山未来,https://fc.maa1804.com/b/tjofshghra/tjofshghra.m3u8
 
-💫heyzo_8642,#genre#
+heyzo_8642,#genre#
 heyzo0581川岛,https://fc.maa1804.com/m/bccccoaite/bccccoaite.m3u8
 heyzo1457笑田凛,https://fc.maa1804.com/b/ejgoepbpqz/ejgoepbpqz.m3u8
 heyzo1357春日部,https://fc.maa1804.com/m/xdasdgvdzp/xdasdgvdzp.m3u8
 heyzo1445长谷川,https://fc.maa1804.com/e/qkqajdfulg/qkqajdfulg.m3u8
 heyzo1601北川,https://fc.maa1801.com/d/mdsjynuabc/mdsjynuabc.m3u8
 
-💫素人_8642,#genre#
+素人_8642,#genre#
 素人H4610铃,https://fc.maa1804.com/g/wodhvufljw/wodhvufljw.m3u8
 素人H0930铃,https://fc.maa1804.com/b/cevumxmskf/cevumxmskf.m3u8
 型号秋元花,https://fc.maa1804.com/h/eactfldcal/eactfldcal.m3u8
 C0930今杉香帆子,https://fc.maa1804.com/e/kjkrnilrqm/kjkrnilrqm.m3u8
 C0930中江寻乃,https://fc.maa1804.com/n/gemfgbagrl/gemfgbagrl.m3u8
 
-💫paco_8642,#genre#
+paco_8642,#genre#
 paco121214美熟女,https://fc.maa1804.com/m/copcxwurwe/copcxwurwe.m3u8
 paco123116水笑菜美,https://fc.maa1804.com/b/xgjpkphidn/xgjpkphidn.m3u8
 paco090217大泽,https://fc.maa1804.com/b/hamagcjsci/hamagcjsci.m3u8
@@ -5107,7 +5107,7 @@ paco032517白笑奈子,https://fc.maa1804.com/h/qvwodhvufl/qvwodhvufl.m3u8
 paco092713白笑奈那子,https://fc.maa1804.com/c/aouscieufe/aouscieufe.m3u8
 paco010819有贺,https://fc.maa1804.com/h/ofnokltorn/ofnokltorn.m3u8
 
-💫东京_8642,#genre#
+东京_8642,#genre#
 东京k1464松冈美织,https://fc.maa1804.com/e/lyimkdjwgp/lyimkdjwgp.m3u8
 东京1245松冈美织,https://fc.maa1804.com/c/epwfulwxdd/epwfulwxdd.m3u8
 东京1246松冈美织,https://fc.maa1804.com/f/telmnplwqh/telmnplwqh.m3u8
@@ -5144,7 +5144,7 @@ paco010819有贺,https://fc.maa1804.com/h/ofnokltorn/ofnokltorn.m3u8
 东京0986酒井,https://fc.maa1804.com/d/pilicllabs/pilicllabs.m3u8
 东京 Hot n0982巖崎,https://fc.maa1804.com/g/jobtusdlca/jobtusdlca.m3u8
 
-💫Tokyon_8642,#genre#
+Tokyon_8642,#genre#
 Tokyok1279铃木希美,https://fc.maa1804.com/c/pgizsuywfh/pgizsuywfh.m3u8
 Tokyok1374金桥结衣,https://fc.maa1804.com/e/tcsezwdrlo/tcsezwdrlo.m3u8
 Tokyon0981藤原纱英,https://fc.maa1804.com/b/tedcshoscb/tedcshoscb.m3u8
@@ -5157,7 +5157,7 @@ Tokyok1450今井菜那,https://fc.maa1804.com/f/ssgxgzxqcz/ssgxgzxqcz.m3u8
 Tokyon1243樱井茉莉加藤,https://fc.maa1804.com/g/khomddbsac/khomddbsac.m3u8
 Tokyon1244樱井茉莉加藤,https://fc.maa1804.com/e/dctmfqofhz/dctmfqofhz.m3u8
 
-💫VIP專享中字_8642,#genre#
+VIP專享中字_8642,#genre#
 SET-009c-僕生中出人妻篠田ゆう,http://videocdn.quweikm.com:8091/20180730/SET-009c/index.m3u8
 SERO-0205c-抜14発中出武井麻希,http://videocdn.quweikm.com:8091/20180730/SERO-0205c/index.m3u8
 SERO-0272c-男性主導の體位上原亜衣,http://videocdn.quweikm.com:8091/20180730/SERO-0272c/index.m3u8
