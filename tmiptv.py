@@ -209,7 +209,7 @@ class IPTVUpdater:
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             executor.map(self._process_api, api_urls)
         # 新增：固定接口
-        fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/refs/heads/main/%E7%AC%AC%E4%BA%8C"
+        fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/main/第二"
         self._process_fixed_api(fixed_api)
         print("\n步骤3/4：整理频道数据")
         self._save_channels()
