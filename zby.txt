@@ -3786,8 +3786,6 @@ sichuan,http://103.121.188.31:9901/tsfile/live/1038_1.m3u8?key=txiptv&playlive=1
 齐鲁频道,http://119.163.239.191:9901/tsfile/live/0018_1.m3u8?key=txiptv&playlive=1&authid=0
 齐鲁频道,http://adsl03.sdjg.vip:9901/tsfile/live/0018_1.m3u8?key=txiptv&playlive=1&authid=0
 齐鲁高清,http://124.128.73.58:9901/tsfile/live/1000_1.m3u8?key=txiptv&playlive=1&authid=0
-
-
 # ===== 新增直播源 =====
 
 【山西】太原联通酒店源
