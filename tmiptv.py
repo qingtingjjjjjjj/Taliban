@@ -3,7 +3,7 @@ import re
 import time
 import os
 import concurrent.futures
-from urllib.parse import urljoin, urlparse, urlunparse
+from urllib.parse import urljoin, urlparse, urlunparse, quote
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -11,7 +11,7 @@ from urllib3.util.retry import Retry
 # 增强版配置参数
 # ======================
 MAX_WORKERS = 15  # 并发数
-SPEED_THRESHOLD = 0.15  # 原有测速阈值
+SPEED_THRESHOLD = 0.15  # 原有测速阈值 KB/s
 REQUEST_TIMEOUT = 20  # 超时时间
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 RETRY_STRATEGY = Retry(
@@ -24,6 +24,7 @@ RETRY_STRATEGY = Retry(
 class IPTVUpdater:
     def __init__(self):
         self.channel_dict = {}  # 字典去重
+        self.fixed_groups = {}  # 固定接口分组字典
         self.session = self._create_session()
         self.sources = [
             "https://d.kstore.dev/download/10694/zmtvid.txt",
@@ -136,31 +137,57 @@ class IPTVUpdater:
             print(f"⚠ 请求失败: {str(e)}")
 
     def _process_fixed_api(self, api_url):
-        """固定接口拉取直播源，原有逻辑测速，不限制速度阈值"""
-        print(f"\n▶ 正在处理固定接口: {api_url}")
+        """固定接口拉取直播源，保留原始分组"""
         try:
-            response = self.session.get(api_url, timeout=REQUEST_TIMEOUT)
+            parsed = urlparse(api_url)
+            path = quote(parsed.path)
+            fixed_url = urlunparse((parsed.scheme, parsed.netloc, path, '', '', ''))
+
+            print(f"\n▶ 正在处理固定接口: {fixed_url}")
+            response = self.session.get(fixed_url, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
-            text = response.text
-            group_pattern = re.compile(r'#EXTINF:.*?,(.*?)\n(.*?)\n', re.S)
-            matches = group_pattern.findall(text)
-            if not matches:
-                print(f"⚠ 未找到有效频道: {api_url}")
+            text = response.text.strip()
+            if not text:
+                print(f"⚠ 固定接口内容为空")
                 return
+
+            lines = text.splitlines()
+            current_group = "其他"
             with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 futures = []
-                for name, url in matches:
-                    full_url = url.strip()
-                    unique_key = f"{name.strip()}|{full_url}"
-                    if unique_key not in self.channel_dict:
-                        futures.append((name.strip(), full_url, executor.submit(self._speed_test, full_url)))
-                for name, url, future in futures:
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if line.startswith("#EXTINF"):
+                        name_match = re.match(r'#EXTINF:.*?,(.*)', line)
+                        channel_name = name_match.group(1).strip() if name_match else "未知"
+                    elif line.startswith("#EXTGRP"):
+                        grp_match = re.match(r'#EXTGRP:(.*)', line)
+                        if grp_match:
+                            current_group = grp_match.group(1).strip()
+                        continue
+                    elif line.startswith("#"):
+                        continue
+                    else:
+                        url = line.strip()
+                        if not url.startswith("http"):
+                            continue
+                        unique_key = f"{channel_name}|{url}"
+                        if unique_key not in self.channel_dict:
+                            futures.append((current_group, channel_name, url, executor.submit(self._speed_test, url)))
+
+                for group, name, url, future in futures:
                     speed = future.result()
                     if speed > 0:
+                        if group not in self.fixed_groups:
+                            self.fixed_groups[group] = []
+                        self.fixed_groups[group].append(f"{name},{url}")
                         self.channel_dict[f"{name}|{url}"] = f"{name},{url}"
-                        print(f"✔ {name.ljust(20)} {speed} KB/s")
+                        print(f"✔ [{group}] {name.ljust(20)} {speed} KB/s")
                     else:
-                        print(f"✘ {name.ljust(20)} 速度不足 {speed} KB/s")
+                        print(f"✘ [{group}] {name.ljust(20)} 速度不足 {speed} KB/s")
+
         except Exception as e:
             print(f"⚠ 固定接口处理失败: {str(e)}")
 
@@ -168,6 +195,7 @@ class IPTVUpdater:
         cctv_list, satellite_list, others_list = [], [], []
         cctv_pattern = re.compile(r"CCTV[\-\s]?(\d{1,2}\+?|[4-8]K|UHD|HD|4K|8K)", re.I)
         satellite_pattern = re.compile(r"([\u4e00-\u9fa5]{2,4}卫视)(?:高清|标清|\+?)?台?")
+
         for line in self.channel_dict.values():
             name, url = line.split(',', 1)
             if cctv_match := cctv_pattern.search(name):
@@ -179,9 +207,11 @@ class IPTVUpdater:
                 satellite_list.append(f"{sat_name},{url}")
             else:
                 others_list.append(line)
+
         cctv_list.sort(key=lambda x: int(re.search(r"\d+", x).group()) if re.search(r"\d+", x) else 999)
         satellite_list = sorted(list(set(satellite_list)))
         others_list = sorted(list(set(others_list)))
+
         try:
             with open("zby.txt", "w", encoding="utf-8") as f:
                 f.write(f"# 最后更新时间: {time.strftime('%Y-%m-%d %H:%M')}\n\n")
@@ -190,7 +220,14 @@ class IPTVUpdater:
                 f.write("卫视频道,#genre#\n")
                 f.write("\n".join(satellite_list) + "\n\n")
                 f.write("其他频道,#genre#\n")
-                f.write("\n".join(others_list))
+                f.write("\n".join(others_list) + "\n\n")
+
+                # 固定接口分组输出
+                if self.fixed_groups:
+                    for group_name, channels in self.fixed_groups.items():
+                        f.write(f"{group_name},#genre#\n")
+                        f.write("\n".join(channels) + "\n\n")
+
             print(f"\n✅ 成功写入文件，总计频道数：{len(self.channel_dict)}")
             print(f"文件路径：{os.path.abspath('zby.txt')}")
             print(f"文件大小：{os.path.getsize('zby.txt') / 1024:.2f} KB")
@@ -202,17 +239,22 @@ class IPTVUpdater:
         print("\n" + "="*40)
         print(" IPTV列表更新程序启动 ".center(40, "★"))
         print("="*40)
+
         print("\n步骤1/4：获取源数据")
         api_urls = self._fetch_sources()
         print(f"找到有效API端点：{len(api_urls)}个")
+
         print("\n步骤2/4：处理API端点")
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             executor.map(self._process_api, api_urls)
-        # 新增：固定接口
-        fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/main/第二"
+
+        print("\n步骤2.1/4：处理固定接口")
+        fixed_api = "https://raw.githubusercontent.com/xiaolin330328/ctv/main/第二"  # txt 文件无后缀
         self._process_fixed_api(fixed_api)
+
         print("\n步骤3/4：整理频道数据")
         self._save_channels()
+
         print("\n步骤4/4：完成更新")
         print(f"{'='*40}\n{' 更新完成 '.center(40, '☆')}\n{'='*40}")
 
