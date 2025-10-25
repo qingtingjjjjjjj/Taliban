@@ -2,7 +2,7 @@ name: tmtv
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # 每天 06:00 UTC 触发（北京时间14:00）
+    - cron: '0 22 * * *'  # 每天 22:00 UTC（北京时间 06:00）
   workflow_dispatch:       # ✅ 支持手动触发
   push:
     branches:
