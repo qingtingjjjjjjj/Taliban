@@ -27,7 +27,7 @@ class IPTVUpdater:
         self.fixed_groups = {}  # 固定接口分组字典
         self.session = self._create_session()
         self.sources = [
-            "https://d.kstore.dev/download/10694/zmtvid.txt",
+            "https://raw.githubusercontent.com/qingtingjjjjjjj/Taliban/refs/heads/main/ip.txt",
             "https://raw.githubusercontent.com/iptv-org/iptv/master/scripts/sources.md",
             "https://raw.githubusercontent.com/freeiptv/iptv/master/sources.md"
         ]
