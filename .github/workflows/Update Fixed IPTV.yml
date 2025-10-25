@@ -2,7 +2,7 @@ name: Update Fixed IPTV
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # 每天北京时间16:00 UTC+8
+    - cron: '0 23 * * *'  # ✅ 每天 23:00 UTC（北京时间 07:00）
   workflow_dispatch:
 
 jobs:
